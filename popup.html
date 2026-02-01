@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      width: 350px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 16px;
+      color: #333;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #eee;
+    }
+
+    .header img {
+      width: 32px;
+      height: 32px;
+    }
+
+    h3 {
+      margin: 0;
+      color: #2c3e50;
+    }
+
+    #result {
+      margin-top: 16px;
+      font-size: 14px;
+      line-height: 1.5;
+      background: #f9f9f9;
+      padding: 12px;
+      border-radius: 6px;
+      min-height: 50px;
+    }
+
+    button {
+      width: 100%;
+      cursor: pointer;
+      padding: 10px;
+      background: #ff0000;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #cc0000;
+    }
+
+    strong {
+      color: #e74c3c;
+    }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    select {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      background: white;
+      cursor: pointer;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: #ff0000;
+    }
+
+    .question-section {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #eee;
+    }
+
+    .question-section label {
+      font-size: 13px;
+      color: #666;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .question-box {
+      display: flex;
+      gap: 8px;
+    }
+
+    #customQuestion {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 13px;
+      resize: none;
+      height: 36px;
+      font-family: inherit;
+    }
+
+    #customQuestion:focus {
+      outline: none;
+      border-color: #ff0000;
+    }
+
+    #askBtn {
+      width: auto;
+      padding: 8px 16px;
+      background: #2c3e50;
+      font-size: 13px;
+    }
+
+    #askBtn:hover {
+      background: #1a252f;
+    }
+
+    .word-count {
+      font-size: 11px;
+      color: #999;
+      text-align: right;
+      margin-top: 4px;
+    }
+
+    .word-count.limit {
+      color: #e74c3c;
+    }
+
+    .save-history {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .save-history input[type="checkbox"] {
+      cursor: pointer;
+    }
+
+    .history-section {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #eee;
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .history-header span {
+      font-size: 13px;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+
+    #clearHistoryBtn {
+      width: auto;
+      padding: 4px 10px;
+      font-size: 11px;
+      background: #95a5a6;
+    }
+
+    #clearHistoryBtn:hover {
+      background: #7f8c8d;
+    }
+
+    .history-list {
+      max-height: 200px;
+      overflow-y: auto;
+      font-size: 12px;
+    }
+
+    .history-item {
+      padding: 8px;
+      background: #f5f5f5;
+      border-radius: 4px;
+      margin-bottom: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .history-item:hover {
+      background: #e8e8e8;
+    }
+
+    .history-item .video-title {
+      font-weight: bold;
+      color: #2c3e50;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .history-item .history-type {
+      font-size: 10px;
+      color: #999;
+      margin-top: 2px;
+    }
+
+    .history-item .history-question {
+      color: #666;
+      font-style: italic;
+      margin-top: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .history-empty {
+      color: #999;
+      font-style: italic;
+      text-align: center;
+      padding: 12px;
+    }
+
+    /* API Key Section */
+    .api-section {
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 12px;
+      font-size: 13px;
+    }
+
+    .api-section.has-key {
+      background: #d4edda;
+      border-color: #28a745;
+    }
+
+    .api-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .api-section-header span {
+      font-weight: bold;
+      color: #856404;
+    }
+
+    .api-section.has-key .api-section-header span {
+      color: #155724;
+    }
+
+    .api-section p {
+      margin: 0 0 8px 0;
+      color: #856404;
+      font-size: 12px;
+    }
+
+    .api-section.has-key p {
+      color: #155724;
+    }
+
+    .api-section a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+
+    .api-section a:hover {
+      text-decoration: underline;
+    }
+
+    .api-input-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    #apiKeyInput {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 12px;
+      font-family: monospace;
+    }
+
+    #apiKeyInput:focus {
+      outline: none;
+      border-color: #ffc107;
+    }
+
+    .api-btn {
+      width: auto;
+      padding: 8px 12px;
+      font-size: 12px;
+      border-radius: 4px;
+    }
+
+    #saveApiKeyBtn {
+      background: #28a745;
+    }
+
+    #saveApiKeyBtn:hover {
+      background: #218838;
+    }
+
+    #editApiKeyBtn {
+      background: #007bff;
+    }
+
+    #editApiKeyBtn:hover {
+      background: #0056b3;
+    }
+
+    #deleteApiKeyBtn {
+      background: #dc3545;
+    }
+
+    #deleteApiKeyBtn:hover {
+      background: #c82333;
+    }
+
+    .api-key-display {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .api-key-masked {
+      font-family: monospace;
+      background: #f8f9fa;
+      padding: 4px 8px;
+      border-radius: 4px;
+      flex: 1;
+      font-size: 12px;
+    }
+
+    .api-buttons {
+      display: flex;
+      gap: 6px;
+    }
+
+    .settings-toggle {
+      cursor: pointer;
+      font-size: 18px;
+      color: #666;
+      background: none;
+      border: none;
+      padding: 0;
+      width: auto;
+    }
+
+    .settings-toggle:hover {
+      color: #333;
+      background: none;
+    }
+
+    /* Disabled state for features */
+    .features-disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .features-disabled select,
+    .features-disabled button,
+    .features-disabled input {
+      cursor: not-allowed;
+    }
+
+    #mainFeatures.features-disabled #result {
+      pointer-events: auto;
+    }
+
+    /* Footer Section */
+    .footer {
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid #eee;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .footer-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      font-size: 12px;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: all 0.2s;
+      font-weight: 500;
+    }
+
+    .donate-link {
+      background: #0070ba;
+      color: white;
+    }
+
+    .donate-link:hover {
+      background: #005ea6;
+    }
+
+    .suggest-link {
+      background: #6c757d;
+      color: white;
+    }
+
+    .suggest-link:hover {
+      background: #5a6268;
+    }
+
+    .footer-link svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <img src="logo.png" alt="FrameCheck AI">
+    <h3>FrameCheck AI</h3>
+    <button class="settings-toggle" id="settingsToggle" title="API Settings">&#9881;</button>
+  </div>
+
+  <!-- API Key Section - No Key -->
+  <div class="api-section" id="apiSectionNoKey">
+    <div class="api-section-header">
+      <span>API Key Required</span>
+    </div>
+    <p>To use FrameCheck AI, you need a free Gemini API key.</p>
+    <p><a href="https://aistudio.google.com/app/apikey" target="_blank">Get your free API key here</a></p>
+    <p style="margin-top: 8px; font-size: 11px; color: #666;">
+      1. Click the link above<br>
+      2. Sign in with Google<br>
+      3. Click "Create API Key"<br>
+      4. Copy and paste it below
+    </p>
+    <div class="api-input-row">
+      <input type="password" id="apiKeyInput" placeholder="Paste your API key here...">
+      <button class="api-btn" id="saveApiKeyBtn">Save</button>
+    </div>
+  </div>
+
+  <!-- API Key Section - Has Key -->
+  <div class="api-section has-key" id="apiSectionHasKey" style="display: none;">
+    <div class="api-section-header">
+      <span>API Key Saved</span>
+    </div>
+    <div class="api-key-display">
+      <span class="api-key-masked" id="apiKeyMasked">AIza...****</span>
+      <div class="api-buttons">
+        <button class="api-btn" id="editApiKeyBtn">Edit</button>
+        <button class="api-btn" id="deleteApiKeyBtn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Features Container - disabled until API key is added -->
+  <div id="mainFeatures" class="features-disabled">
+  <div class="controls">
+    <select id="analysisMode" disabled>
+      <option value="verify">Verify</option>
+      <option value="summary">Summary</option>
+      <option value="deep">Analysis</option>
+    </select>
+    <select id="languageSelect" disabled>
+      <option value="English">English</option>
+      <option value="Spanish">Spanish - Espanol</option>
+      <option value="French">French - Francais</option>
+      <option value="German">German - Deutsch</option>
+      <option value="Italian">Italian - Italiano</option>
+      <option value="Portuguese">Portuguese - Portugues</option>
+      <option value="Russian">Russian - Russkiy</option>
+      <option value="Japanese">Japanese - Nihongo</option>
+      <option value="Korean">Korean - Hangugeo</option>
+      <option value="Chinese Simplified">Chinese (Simplified)</option>
+      <option value="Chinese Traditional">Chinese (Traditional)</option>
+      <option value="Arabic">Arabic - Arabiya</option>
+      <option value="Hindi">Hindi</option>
+      <option value="Bengali">Bengali - Bangla</option>
+      <option value="Indonesian">Indonesian - Bahasa Indonesia</option>
+      <option value="Malay">Malay - Bahasa Melayu</option>
+      <option value="Thai">Thai</option>
+      <option value="Vietnamese">Vietnamese - Tieng Viet</option>
+      <option value="Turkish">Turkish - Turkce</option>
+      <option value="Polish">Polish - Polski</option>
+      <option value="Dutch">Dutch - Nederlands</option>
+      <option value="Swedish">Swedish - Svenska</option>
+      <option value="Norwegian">Norwegian - Norsk</option>
+      <option value="Danish">Danish - Dansk</option>
+      <option value="Finnish">Finnish - Suomi</option>
+      <option value="Greek">Greek - Ellinika</option>
+      <option value="Hebrew">Hebrew - Ivrit</option>
+      <option value="Czech">Czech - Cestina</option>
+      <option value="Romanian">Romanian - Romana</option>
+      <option value="Hungarian">Hungarian - Magyar</option>
+      <option value="Ukrainian">Ukrainian - Ukrainska</option>
+      <option value="Filipino">Filipino - Tagalog</option>
+      <option value="Swahili">Swahili - Kiswahili</option>
+      <option value="Persian">Persian - Farsi</option>
+      <option value="Urdu">Urdu</option>
+      <option value="Tamil">Tamil</option>
+      <option value="Telugu">Telugu</option>
+      <option value="Marathi">Marathi</option>
+      <option value="Punjabi">Punjabi</option>
+      <option value="Gujarati">Gujarati</option>
+    </select>
+  </div>
+  <button id="analyzeBtn" disabled>Enter</button>
+
+  <div class="question-section">
+    <label>Ask a question about this video:</label>
+    <div class="question-box">
+      <input type="text" id="customQuestion" placeholder="e.g., Is this sponsored content?" maxlength="300" disabled>
+      <button id="askBtn" disabled>Ask</button>
+    </div>
+    <div class="word-count"><span id="wordCount">0</span>/50 words</div>
+    <div class="save-history">
+      <input type="checkbox" id="saveHistoryCheckbox" disabled>
+      <label for="saveHistoryCheckbox">Save history (last 5 items)</label>
+    </div>
+  </div>
+
+  <div id="result">Add your API key above to start analyzing videos.</div>
+
+  <div class="history-section" id="historySection" style="display: none;">
+    <div class="history-header">
+      <span>History</span>
+      <button id="clearHistoryBtn" disabled>Clear</button>
+    </div>
+    <div class="history-list" id="historyList">
+      <div class="history-empty">No saved history</div>
+    </div>
+  </div>
+  </div><!-- End mainFeatures -->
+
+  <div class="footer">
+    <a href="https://paypal.me/aarlic" target="_blank" class="footer-link donate-link">
+      <svg viewBox="0 0 24 24"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.77.77 0 0 1 .757-.629h6.724c2.332 0 4.058.625 5.09 1.843.465.55.788 1.182.954 1.878.175.736.175 1.6-.003 2.641l-.017.096v.856l.665.334c.497.242.893.527 1.186.859.39.44.654.98.783 1.608.134.648.134 1.418-.002 2.287-.157.99-.46 1.85-.9 2.554-.395.635-.914 1.168-1.543 1.588-.595.398-1.3.693-2.095.88-.77.182-1.643.274-2.595.274H12.1a1.188 1.188 0 0 0-1.174.997l-.054.317-.913 5.784-.041.212a1.188 1.188 0 0 1-1.173.998h-1.67z"/></svg>
+      Donate
+    </a>
+    <a href="mailto:aarlic@outlook.com?subject=FrameCheck%20AI%20Suggestion" class="footer-link suggest-link">
+      <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+      Suggestion
+    </a>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+
+</html>
